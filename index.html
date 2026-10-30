@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>314钥匙徽章倒卖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@700;800&family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a field ledger. Inputs on the left as a requisition form, the trade on the right as a receipt, curve and notes below. */
+:root {
+  --bg: #e9e6dc;
+  --panel: #f6f4ec;
+  --ink: #23251f;
+  --muted: #6b6c5f;
+  --line: #cfcabb;
+  --brass: #8d6a1f;
+  --brass-soft: #e7d9b4;
+  --good: #3d6b34;
+  --bad: #a3392b;
+  --good-soft: #dbe6d3;
+  --bad-soft: #f1d9d3;
+  --f-display: "Saira Condensed", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --f-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, "Noto Sans SC", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1d19; --panel: #23261f; --ink: #e6e3d6; --muted: #9a9a88; --line: #3a3d33;
+    --brass: #d2a94f; --brass-soft: #3b3220; --good: #8cc47a; --bad: #e47c69;
+    --good-soft: #243321; --bad-soft: #3a221d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1d19; --panel: #23261f; --ink: #e6e3d6; --muted: #9a9a88; --line: #3a3d33;
+  --brass: #d2a94f; --brass-soft: #3b3220; --good: #8cc47a; --bad: #e47c69;
+  --good-soft: #243321; --bad-soft: #3a221d; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.65;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 48px;
+}
+a { color: var(--brass); }
+.wrap { max-width: 1040px; margin: 0 auto; display: grid; gap: 22px; }
+header { display: grid; gap: 6px; border-bottom: 2px solid var(--ink); padding-bottom: 14px; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; color: var(--brass); }
+h1 { font-family: var(--f-display); font-weight: 900; font-size: clamp(32px, 6vw, 50px); line-height: 1.05; margin: 0; letter-spacing: .02em; text-wrap: balance; }
+.sub { color: var(--muted); max-width: 40em; margin: 0; }
+.trade { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 13px; margin-top: 6px; }
+.chip { border: 1px solid var(--line); padding: 3px 8px; background: var(--panel); }
+.chip b { color: var(--brass); font-weight: 700; font-family: var(--f-mono); }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 22px; align-items: start; }
+@media (max-width: 760px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+section { min-width: 0; }
+h2 { font-family: var(--f-body); font-weight: 900; font-size: 20px; letter-spacing: .04em; margin: 0 0 12px; display: flex; align-items: baseline; gap: 10px; }
+h2 small { font-family: var(--f-mono); font-size: 11px; color: var(--muted); letter-spacing: .06em; font-weight: 400; }
+.form { display: grid; gap: 14px; }
+.field { display: grid; gap: 4px; }
+.field label { font-size: 13px; font-weight: 700; }
+.field .hint { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.in { display: flex; align-items: stretch; border: 1px solid var(--line); background: var(--panel); }
+.in:focus-within { outline: 2px solid var(--brass); outline-offset: 1px; }
+.in input, .in select { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink); font-family: var(--f-mono); font-size: 16px; padding: 9px 10px; outline: none; font-variant-numeric: tabular-nums; }
+.in .unit { color: var(--muted); padding: 9px 10px; border-left: 1px solid var(--line); font-size: 13px; white-space: nowrap; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 420px) { .row2 { grid-template-columns: 1fr; } }
+.seg { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--ink); }
+.seg button { font: inherit; font-size: 14px; font-weight: 700; padding: 9px 8px; border: 0; background: var(--panel); color: var(--ink); cursor: pointer; line-height: 1.3; }
+.seg button + button { border-left: 1px solid var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.seg button:focus-visible { outline: 2px solid var(--brass); outline-offset: -4px; }
+.seg button small { display: block; font-weight: 400; font-size: 11px; opacity: .75; }
+.reset { justify-self: start; font: inherit; font-size: 13px; color: var(--muted); background: transparent; border: 1px solid var(--line); padding: 5px 10px; cursor: pointer; }
+.reset:hover { color: var(--ink); border-color: var(--ink); }
+.reset:focus-visible { outline: 2px solid var(--brass); outline-offset: 1px; }
+.check { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--brass); flex: none; }
+details.adv { border-top: 1px dashed var(--line); padding-top: 10px; }
+details.adv summary { cursor: pointer; font-size: 13px; letter-spacing: .06em; color: var(--muted); }
+details.adv[open] summary { margin-bottom: 12px; }
+details.adv .form { gap: 12px; }
+
+.receipt { background: var(--panel); border: 1px solid var(--line); padding: 18px 18px 14px; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.verdict { display: grid; gap: 2px; padding: 14px 16px; margin: -18px -18px 16px; border-bottom: 1px solid var(--line); }
+.verdict.pos { background: var(--good-soft); }
+.verdict.neg { background: var(--bad-soft); }
+.verdict .k { font-family: var(--f-body); font-size: 13px; letter-spacing: .08em; color: var(--muted); }
+.verdict .big { font-family: var(--f-display); font-weight: 800; font-size: clamp(36px, 7vw, 50px); line-height: 1.05; }
+.verdict.pos .big { color: var(--good); }
+.verdict.neg .big { color: var(--bad); }
+.verdict .meta { font-family: var(--f-body); font-size: 13px; color: var(--muted); }
+.ln { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px dotted var(--line); font-size: 14px; }
+.ln span:first-child { font-family: var(--f-body); color: var(--muted); }
+.ln.total { border-bottom: 0; border-top: 2px solid var(--ink); margin-top: 6px; padding-top: 10px; font-weight: 600; font-size: 15px; }
+.ln.total span:first-child { color: var(--ink); font-weight: 700; }
+.neg-t { color: var(--bad); }
+.pos-t { color: var(--good); }
+.marks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+@media (max-width: 480px) { .marks { grid-template-columns: 1fr; } }
+.mark { border-top: 2px solid var(--brass); padding-top: 6px; display: grid; gap: 2px; align-content: start; }
+.mark .k { font-family: var(--f-body); font-size: 12px; color: var(--muted); }
+.mark .v { font-size: 15px; font-weight: 600; }
+
+.chart { background: var(--panel); border: 1px solid var(--line); padding: 14px 14px 8px; }
+.chart svg { width: 100%; height: auto; display: block; }
+.chart .cap { font-size: 13px; color: var(--muted); margin: 0 0 8px; max-width: 46em; }
+
+.notes { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 22px; }
+@media (max-width: 760px) { .notes { grid-template-columns: minmax(0, 1fr); } }
+.notes p, .notes li { max-width: 40em; }
+.notes p { margin: 0 0 10px; }
+.notes ul { padding-left: 18px; margin: 0; display: grid; gap: 6px; }
+.formula { font-family: var(--f-mono); font-size: 13px; background: var(--panel); border: 1px solid var(--line); padding: 10px 12px; overflow-x: auto; white-space: nowrap; margin-bottom: 10px; }
+footer { font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Jaeger · 4级 · 以物易物倒卖</div>
+    <h1>314钥匙徽章倒卖</h1>
+    <p class="sub">在跳蚤市场买银徽章，找 Jaeger 换宿舍楼 314 房间符号钥匙，再挂回跳蚤市场卖掉，到底赚不赚？改一下下面的价格，结果会实时更新。</p>
+    <div class="trade">
+      <span class="chip">银徽章 <b id="t-badges">25</b> 个</span>
+      <span aria-hidden="true">→</span>
+      <span class="chip">Jaeger 4级</span>
+      <span aria-hidden="true">→</span>
+      <span class="chip">宿舍楼 314 房间符号钥匙 <b>1</b> 把</span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section aria-labelledby="h-in">
+      <h2 id="h-in">价格 <small>可修改</small></h2>
+      <div class="form">
+        <div class="seg" role="group" aria-label="计算模式">
+          <button type="button" id="mode-profit" aria-pressed="true">算利润<small>已知徽章价，算能赚多少</small></button>
+          <button type="button" id="mode-max" aria-pressed="false">反推徽章价<small>定好利润，算徽章最高买价</small></button>
+        </div>
+        <div class="field" id="f-target" hidden>
+          <label for="margin">目标利润</label>
+          <div class="row2">
+            <div class="in"><input id="margin" type="number" inputmode="decimal" min="0" step="1" value="20"></div>
+            <div class="in"><select id="mtype"><option value="roi" selected>% 回报率（占投入）</option><option value="pm">% 利润率（占售价）</option><option value="flat">₽ 固定利润</option></select></div>
+          </div>
+          <span class="hint" id="margin-hint">回报率 20% 表示每投入 100 ₽ 买徽章，最后赚 20 ₽。</span>
+        </div>
+        <div class="field" id="f-badge">
+          <label for="badge">银徽章单价</label>
+          <div class="in"><input id="badge" type="number" inputmode="numeric" min="0" step="10000" value="230000"><span class="unit">₽ / 个</span></div>
+          <span class="hint">你在跳蚤市场买一个银徽章的价格。默认值仅为示例，请以游戏内实时价格为准。</span>
+        </div>
+        <div class="field">
+          <label for="sell">钥匙挂单价格</label>
+          <div class="in"><input id="sell" type="number" inputmode="numeric" min="0" step="100000" value="9500000"><span class="unit">₽</span></div>
+          <span class="hint">你在跳蚤市场挂出钥匙的价格。默认值仅为示例，建议比当前最低价稍低一点。</span>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="keys">倒卖数量</label>
+            <div class="in"><input id="keys" type="number" inputmode="numeric" min="1" step="1" value="1"><span class="unit">把</span></div>
+          </div>
+          <div class="field">
+            <label for="hm">藏身处管理 技能等级</label>
+            <div class="in"><input id="hm" type="number" inputmode="numeric" min="0" max="51" step="1" value="0"><span class="unit">级</span></div>
+          </div>
+        </div>
+        <label class="check" for="intel"><input id="intel" type="checkbox"> 已建造 3 级情报中心（手续费减免 30%）</label>
+
+        <details class="adv">
+          <summary>高级设置：交换配方与手续费参数</summary>
+          <div class="form">
+            <div class="row2">
+              <div class="field">
+                <label for="nbadge">每把钥匙所需银徽章</label>
+                <div class="in"><input id="nbadge" type="number" inputmode="numeric" min="1" step="1" value="25"><span class="unit">个</span></div>
+              </div>
+              <div class="field">
+                <label for="tax">税率常数</label>
+                <div class="in"><select id="tax"><option value="0.05" selected>0.05（当前版本）</option><option value="0.03">0.03（旧版本）</option></select></div>
+              </div>
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="base">钥匙基准价格</label>
+                <div class="in"><input id="base" type="number" inputmode="numeric" min="1" step="1000" value="1500000"><span class="unit">₽</span></div>
+                <span class="hint">隐藏数值，手续费按它计算</span>
+              </div>
+              <div class="field">
+                <label for="ther">Therapist 收购价</label>
+                <div class="in"><input id="ther" type="number" inputmode="numeric" min="0" step="1000" value="765000"><span class="unit">₽</span></div>
+                <span class="hint">卖不掉时的备选</span>
+              </div>
+            </div>
+          </div>
+        </details>
+        <button type="button" id="reset" class="reset">恢复默认值</button>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-out">
+      <h2 id="h-out">这一单 <small id="per-note">按 1 把钥匙计算</small></h2>
+      <div class="receipt" id="r-max" aria-live="polite" hidden>
+        <div class="verdict pos">
+          <span class="k">银徽章最高可接受单价</span>
+          <span class="big" id="x-big">0 ₽</span>
+          <span class="meta" id="x-meta"></span>
+        </div>
+        <div>
+          <div class="ln"><span>钥匙在跳蚤市场卖出</span><span id="x-sell">0</span></div>
+          <div class="ln"><span>跳蚤市场手续费</span><span class="neg-t" id="x-fee">0</span></div>
+          <div class="ln"><span id="x-tgt-l">目标利润</span><span class="neg-t" id="x-tgt">0</span></div>
+          <div class="ln total"><span id="x-budget-l">买 25 个银徽章的预算</span><span id="x-budget">0</span></div>
+        </div>
+        <div class="marks">
+          <div class="mark"><span class="k">保本时的最高单价</span><span class="v" id="x-be">0</span></div>
+          <div class="mark"><span class="k">开 3 级情报中心后最高单价</span><span class="v" id="x-intel">0</span></div>
+          <div class="mark"><span class="k">挂单价再压低 5% 后最高单价</span><span class="v" id="x-under">0</span></div>
+        </div>
+      </div>
+      <div class="receipt" id="r-profit" aria-live="polite">
+        <div class="verdict" id="verdict">
+          <span class="k">净利润</span>
+          <span class="big" id="profit">0 ₽</span>
+          <span class="meta" id="roi">回报率</span>
+        </div>
+        <div>
+          <div class="ln"><span>钥匙在跳蚤市场卖出</span><span id="o-sell">0</span></div>
+          <div class="ln"><span>跳蚤市场手续费</span><span class="neg-t" id="o-fee">0</span></div>
+          <div class="ln"><span id="o-cost-l">银徽章 25 个</span><span class="neg-t" id="o-cost">0</span></div>
+          <div class="ln total"><span>到手利润</span><span id="o-net">0</span></div>
+        </div>
+        <div class="marks">
+          <div class="mark"><span class="k">手续费占挂单价</span><span class="v" id="m-feepct">0%</span></div>
+          <div class="mark"><span class="k">保本挂单价</span><span class="v" id="m-be">0</span></div>
+          <div class="mark"><span class="k">银徽章最高可接受单价</span><span class="v" id="m-maxb">0</span></div>
+        </div>
+        <div class="marks">
+          <div class="mark"><span class="k">改卖给 Therapist</span><span class="v" id="m-ther">0</span></div>
+          <div class="mark"><span class="k">开 3 级情报中心后的手续费</span><span class="v" id="m-intel">0</span></div>
+          <div class="mark"><span class="k">挂单价再压低 5% 的利润</span><span class="v" id="m-under">0</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="chart" aria-labelledby="h-chart">
+    <h2 id="h-chart"><span id="c-title">不同挂单价的利润</span> <small>每把钥匙</small></h2>
+    <p class="cap" id="c-cap">挂单价越高于基准价格，手续费涨得越快，所以利润曲线会逐渐变平。圆点是你当前的挂单价，曲线穿过零线的位置就是保本价。</p>
+    <svg id="svg" viewBox="0 0 720 260" role="img" aria-label="不同挂单价下每把钥匙的净利润"></svg>
+  </section>
+
+  <section class="notes" aria-labelledby="h-how">
+    <div>
+      <h2 id="h-how">跳蚤市场手续费怎么算</h2>
+      <p>手续费在挂单时就先扣，东西没卖出去也不退。它取决于两个数：物品隐藏的基准价格 V<sub>O</sub>，和你的挂单价格 V<sub>R</sub>。</p>
+      <div class="formula">手续费 = V<sub>O</sub>·T<sub>i</sub>·4<sup>P<sub>O</sub></sup>·Q + V<sub>R</sub>·T<sub>r</sub>·4<sup>P<sub>R</sub></sup>·Q</div>
+      <ul>
+        <li>P<sub>O</sub> = log₁₀(V<sub>O</sub>/V<sub>R</sub>)，P<sub>R</sub> = log₁₀(V<sub>R</sub>/V<sub>O</sub>)。两者中为正的那个还要再取 1.08 次方。</li>
+        <li>T<sub>i</sub> 和 T<sub>r</sub> 是税率常数，当前版本都是 0.05。用 eftarkov.com 上这把钥匙的数据验算过：基准价 1,500,000 ₽、挂 1,444,444 ₽ 时手续费为 146,836 ₽，与公式结果一致。</li>
+        <li>单独挂一把钥匙时 Q = 1。</li>
+        <li>3 级情报中心减免 30% 手续费。藏身处管理技能每升 1 级再多减 0.3 个百分点，50 级时最高减免 45%。</li>
+      </ul>
+      <p>挂单价接近基准价格时手续费大约是售价的 10%。挂得越高，比例越大。</p>
+    </div>
+    <div>
+      <h2>倒卖前注意</h2>
+      <ul>
+        <li>这个交换需要 Jaeger 忠诚等级 4 级，并完成任务「生存者之路 - 瘾君子」才会解锁。</li>
+        <li>商人交换通常每次刷新有数量限制，可能一次刷新只能换一把。</li>
+        <li>这把钥匙 35 级才能在跳蚤市场出售。先确认换来的钥匙能正常挂单，挂不了的话就只能看 Therapist 那一栏。</li>
+        <li>银徽章和钥匙价格波动很大，PVP 和 PVE 的价格也不一样。下单前两边都再查一次。</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>默认价格为示例，不是实时数据。基准价格与交换配方参考 <a href="https://www.eftarkov.com/item/5780cf7f2459777de4559322" target="_blank" rel="noopener">eftarkov.com</a>。你修改的数值只保存在你自己的浏览器里。计算结果为估算值。</footer>
+</div>
+
+<script>
+(function () {
+  const ids = ["badge","sell","keys","hm","intel","nbadge","tax","base","ther","margin","mtype"];
+  const el = Object.fromEntries(ids.map(i => [i, document.getElementById(i)]));
+  const $ = id => document.getElementById(id);
+  const KEY = "dorm314-flip-zh-v2";
+  let mode = "profit";
+  const fmt = n => (n < 0 ? "−" : "") + Math.round(Math.abs(n)).toLocaleString("en-US") + " ₽";
+  const pos = n => fmt(Math.abs(n));
+  const short = n => {
+    const a = Math.abs(n), s = n < 0 ? "−" : "";
+    if (a >= 1e4) { const w = a / 1e4; return s + (w >= 100 ? Math.round(w) : +w.toFixed(1)) + "万"; }
+    return s + Math.round(a);
+  };
+  const num = (e, d) => { const v = parseFloat(e.value); return isFinite(v) ? v : d; };
+
+  const defaults = {};
+  ids.forEach(i => defaults[i] = el[i].type === "checkbox" ? el[i].checked : el[i].value);
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (saved) {
+      ids.forEach(i => { if (i in saved) { if (el[i].type === "checkbox") el[i].checked = saved[i]; else el[i].value = saved[i]; } });
+      if (saved.mode === "max") mode = "max";
+    }
+  } catch (e) {}
+
+  function rawFee(base, price, t) {
+    if (price <= 0 || base <= 0) return 0;
+    const VO = base, VR = price;
+    let PO = Math.log10(VO / VR), PR = Math.log10(VR / VO);
+    if (VR < VO) PO = Math.pow(PO, 1.08); else PR = Math.pow(PR, 1.08);
+    return VO * t * Math.pow(4, PO) + VR * t * Math.pow(4, PR);
+  }
+
+  function read() {
+    const hm = Math.max(0, Math.min(51, num(el.hm, 0)));
+    return {
+      badge: Math.max(0, num(el.badge, 0)),
+      sell: Math.max(0, num(el.sell, 0)),
+      keys: Math.max(1, Math.round(num(el.keys, 1))),
+      nb: Math.max(1, Math.round(num(el.nbadge, 25))),
+      t: parseFloat(el.tax.value),
+      base: Math.max(1, num(el.base, 1500000)),
+      ther: Math.max(0, num(el.ther, 0)),
+      margin: Math.max(0, num(el.margin, 0)),
+      mtype: el.mtype.value,
+      hm,
+      red: el.intel.checked ? Math.min(0.45, 0.30 + 0.003 * hm) : 0
+    };
+  }
+
+  // Badge budget per key that still hits the target, given what the key nets after fee
+  function budgetFor(netSale, sell, s) {
+    if (s.mtype === "roi") return netSale / (1 + s.margin / 100);
+    if (s.mtype === "pm") return netSale - sell * s.margin / 100;
+    return netSale - s.margin;
+  }
+
+  function setMode(m) {
+    mode = m;
+    $("mode-profit").setAttribute("aria-pressed", m === "profit");
+    $("mode-max").setAttribute("aria-pressed", m === "max");
+    $("f-badge").hidden = m === "max";
+    $("f-target").hidden = m !== "max";
+    $("r-profit").hidden = m === "max";
+    $("r-max").hidden = m !== "max";
+    calc();
+  }
+
+  function calc() {
+    const s = read();
+    const fee = p => Math.round(rawFee(s.base, p, s.t) * (1 - s.red));
+    const net = p => p - fee(p);
+    const k = s.keys;
+    const f = fee(s.sell);
+
+    try { const o = { mode }; ids.forEach(i => o[i] = el[i].type === "checkbox" ? el[i].checked : el[i].value); localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {}
+
+    $("t-badges").textContent = s.nb;
+    $("per-note").textContent = k === 1 ? "按 1 把钥匙计算" : "共 " + k + " 把钥匙合计";
+
+    if (mode === "max") {
+      const hints = {
+        roi: "回报率 " + s.margin + "% 表示每投入 100 ₽ 买徽章，最后赚 " + s.margin + " ₽。",
+        pm: "利润率 " + s.margin + "% 表示钥匙每卖 100 ₽，有 " + s.margin + " ₽ 是纯利润。",
+        flat: "每把钥匙至少要赚 " + fmt(s.margin) + "。"
+      };
+      $("margin-hint").textContent = hints[s.mtype];
+      const ns = s.sell - f;
+      const budget = budgetFor(ns, s.sell, s);
+      const per = budget / s.nb;
+      const tgt = ns - budget;
+      $("x-big").textContent = per > 0 ? fmt(per) : "无法达成";
+      $("r-max").querySelector(".verdict").className = "verdict " + (per > 0 ? "pos" : "neg");
+      $("x-meta").textContent = per > 0 ? "徽章低于这个价格买入，就能达到目标利润" : "这个挂单价扣完手续费后不够目标利润，试试降低目标或提高挂单价";
+      $("x-sell").textContent = fmt(s.sell * k);
+      $("x-fee").textContent = "−" + pos(f * k) + (s.red ? "（已减免 " + (s.red * 100).toFixed(1).replace(/\.0$/, "") + "%）" : "");
+      $("x-tgt-l").textContent = "目标利润（" + (s.mtype === "flat" ? "固定" : (s.mtype === "roi" ? "回报率 " : "利润率 ") + s.margin + "%") + "）";
+      $("x-tgt").textContent = "−" + pos(tgt * k);
+      $("x-budget-l").textContent = "买 " + (s.nb * k) + " 个银徽章的预算";
+      $("x-budget").textContent = fmt(budget * k);
+      $("x-budget").className = budget >= 0 ? "pos-t" : "neg-t";
+      $("x-be").textContent = fmt(Math.max(0, ns / s.nb));
+      const intelNs = s.sell - Math.round(rawFee(s.base, s.sell, s.t) * (1 - Math.min(0.45, 0.30 + 0.003 * s.hm)));
+      $("x-intel").textContent = fmt(Math.max(0, budgetFor(intelNs, s.sell, s) / s.nb)) + (s.red ? "（已开启）" : "");
+      const up = s.sell * 0.95;
+      $("x-under").textContent = fmt(Math.max(0, budgetFor(net(up), up, s) / s.nb));
+
+      $("c-title").textContent = "不同挂单价的徽章最高可接受单价";
+      $("c-cap").textContent = "钥匙挂得越高，能接受的徽章价格就越高，但手续费会吃掉一部分涨幅。圆点是你当前的挂单价。曲线在零线以下的部分表示达不到目标利润。";
+      draw(s, p => budgetFor(net(p), p, s) / s.nb, null, "最高 ");
+      return;
+    }
+
+    const cost = s.badge * s.nb;
+    const profit = s.sell - f - cost;
+    let peakP = s.base, peakN = -Infinity;
+    for (let p = s.base * 0.2; p <= s.base * 40; p *= 1.002) { const n = net(p); if (n > peakN) { peakN = n; peakP = p; } }
+    let be = null;
+    if (peakN >= cost) {
+      let lo = 0, hi = peakP;
+      for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (net(m) >= cost) hi = m; else lo = m; }
+      be = hi;
+    }
+    const maxBadge = (s.sell - f) / s.nb;
+
+    $("profit").textContent = fmt(profit * k);
+    $("verdict").className = "verdict " + (profit >= 0 ? "pos" : "neg");
+    $("roi").textContent = cost > 0 ? "回报率 " + (profit / cost * 100).toFixed(1) + "%，投入 " + fmt(cost * k) : "未填写银徽章价格";
+    $("o-sell").textContent = fmt(s.sell * k);
+    $("o-fee").textContent = "−" + pos(f * k) + (s.red ? "（已减免 " + (s.red * 100).toFixed(1).replace(/\.0$/, "") + "%）" : "");
+    $("o-cost-l").textContent = "银徽章 " + (s.nb * k) + " 个";
+    $("o-cost").textContent = "−" + pos(cost * k);
+    $("o-net").textContent = fmt(profit * k);
+    $("o-net").className = profit >= 0 ? "pos-t" : "neg-t";
+    $("m-feepct").textContent = s.sell > 0 ? (f / s.sell * 100).toFixed(1) + "%" : "–";
+    $("m-be").textContent = be ? fmt(be) : "无法保本";
+    $("m-maxb").textContent = fmt(Math.max(0, maxBadge));
+    const therP = s.ther - cost;
+    $("m-ther").textContent = fmt(therP * k);
+    $("m-ther").className = "v " + (therP >= 0 ? "pos-t" : "neg-t");
+    const intelFee = Math.round(rawFee(s.base, s.sell, s.t) * (1 - Math.min(0.45, 0.30 + 0.003 * s.hm)));
+    $("m-intel").textContent = fmt(intelFee) + (s.red ? "（已开启）" : "");
+    const under = net(s.sell * 0.95) - cost;
+    $("m-under").textContent = fmt(under * k);
+    $("m-under").className = "v " + (under >= 0 ? "pos-t" : "neg-t");
+
+    $("c-title").textContent = "不同挂单价的利润";
+    $("c-cap").textContent = "挂单价越高于基准价格，手续费涨得越快，所以利润曲线会逐渐变平。圆点是你当前的挂单价，曲线穿过零线的位置就是保本价。";
+    draw(s, p => net(p) - cost, be, "赚 ");
+  }
+
+  function draw(s, yFn, be, verb) {
+    const svg = $("svg");
+    const W = 720, H = 260, L = 64, R = 16, T = 14, B = 34;
+    const xMax = Math.max(s.sell * 1.8, (be || 0) * 1.4, s.base * 3);
+    const xMin = 0;
+    const pts = [];
+    for (let i = 0; i <= 160; i++) { const p = xMin + (xMax - xMin) * i / 160; pts.push([p, yFn(p)]); }
+    let yMin = Math.min(...pts.map(q => q[1]), 0), yMax = Math.max(...pts.map(q => q[1]), 0);
+    const pad = (yMax - yMin) * 0.08 || 1; yMax += pad; yMin -= pad;
+    const X = p => L + (p - xMin) / (xMax - xMin) * (W - L - R);
+    const Y = v => T + (yMax - v) / (yMax - yMin) * (H - T - B);
+    const step = v => { const e = Math.pow(10, Math.floor(Math.log10(v))); const m = v / e; return (m < 2 ? 1 : m < 5 ? 2 : 5) * e; };
+    const mono = 'font-family="IBM Plex Mono, ui-monospace, Noto Sans SC, monospace"';
+    let g = "";
+    const ys = step((yMax - yMin) / 4);
+    for (let v = Math.ceil(yMin / ys) * ys; v <= yMax; v += ys) {
+      g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-width="1"/>`;
+      g += `<text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="11" fill="var(--muted)" ${mono}>${short(v)}</text>`;
+    }
+    const xs = step(xMax / 6);
+    for (let p = xs; p <= xMax; p += xs) {
+      g += `<text x="${X(p)}" y="${H - 12}" text-anchor="middle" font-size="11" fill="var(--muted)" ${mono}>${short(p)}</text>`;
+    }
+    g += `<line x1="${L}" x2="${W - R}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--ink)" stroke-width="1.2"/>`;
+    const d = pts.map((q, i) => (i ? "L" : "M") + X(q[0]).toFixed(1) + " " + Y(q[1]).toFixed(1)).join(" ");
+    g += `<path d="${d} L ${X(xMax)} ${Y(0)} L ${X(xMin)} ${Y(0)} Z" fill="var(--brass-soft)" opacity=".6"/>`;
+    g += `<path d="${d}" fill="none" stroke="var(--brass)" stroke-width="2.4"/>`;
+    if (be && be <= xMax) {
+      g += `<line x1="${X(be)}" x2="${X(be)}" y1="${T}" y2="${H - B}" stroke="var(--muted)" stroke-dasharray="3 4"/>`;
+      const bAnchor = X(be) > W - 140 ? "end" : "start";
+      g += `<text x="${X(be) + (bAnchor === "end" ? -6 : 6)}" y="${T + 12}" text-anchor="${bAnchor}" font-size="11" fill="var(--muted)" ${mono}>保本 ${short(be)}</text>`;
+    }
+    const cy = yFn(s.sell);
+    if (s.sell <= xMax) {
+      const col = cy >= 0 ? "var(--good)" : "var(--bad)";
+      g += `<circle cx="${X(s.sell)}" cy="${Y(cy)}" r="6" fill="${col}" stroke="var(--panel)" stroke-width="2"/>`;
+      const anchor = X(s.sell) > W - 200 ? "end" : "start";
+      g += `<text x="${X(s.sell) + (anchor === "end" ? -10 : 10)}" y="${Y(cy) - 10}" text-anchor="${anchor}" font-size="12" font-weight="600" fill="${col}" ${mono}>挂 ${short(s.sell)} ${verb}${short(cy)}</text>`;
+    }
+    g += `<text x="${W - R}" y="${H - 1}" text-anchor="end" font-size="10" fill="var(--muted)" ${mono}>挂单价 ₽</text>`;
+    svg.innerHTML = g;
+  }
+
+  ids.forEach(i => el[i].addEventListener("input", calc));
+  $("mode-profit").addEventListener("click", () => setMode("profit"));
+  $("mode-max").addEventListener("click", () => setMode("max"));
+  $("reset").addEventListener("click", () => {
+    ids.forEach(i => { if (el[i].type === "checkbox") el[i].checked = defaults[i]; else el[i].value = defaults[i]; });
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    calc();
+  });
+  setMode(mode);
+})();
+</script>
+
+</body>
+</html>
